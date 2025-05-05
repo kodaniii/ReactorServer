@@ -130,6 +130,13 @@ void* acceptClient(void* arg)
     struct epoll_event ev;
     ev.data.fd = cfd;
     ev.events = EPOLLIN | EPOLLET;
+    //printf("acceptClient.........\n");
+    //if (!(ev.events & EPOLLET)) {
+    //    printf("events is not EPOLLET!!!!\n");
+    //}
+    //else {
+    //    printf("events is EPOLLET.\n");
+    //}
     int ret = epoll_ctl(info->epfd, EPOLL_CTL_ADD, cfd, &ev);
     if (ret == -1)
     {
@@ -144,7 +151,14 @@ void* acceptClient(void* arg)
 //int recvHttpRequest(int cfd, int epfd)
 void* recvHttpRequest(void* arg)
 {
-    struct FdInfo* info = (struct FdInfo*)arg;
+    struct FdInfo* info = (struct FdInfo*)arg;  //events is not EPOLLET(from Epoll_wait)
+    //printf("recvHttpRequest......... \n");
+    //if (!(info->fd & EPOLLET)) {
+    //    printf("events is not EPOLLET!!!!\n");
+    //}
+    //else {
+    //    printf("events is EPOLLET.\n");
+    //}
     int len = 0, totle = 0;
     char tmp[1024] = { 0 };     //recv接收到的数据
     char buf[4096] = { 0 };     //来自客户端HTTP请求的数据
